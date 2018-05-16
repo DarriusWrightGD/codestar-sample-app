@@ -3,21 +3,9 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
       - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
   post_build:
     commands:
-      - echo Build started on `date`
-      - echo Building the Docker image...
       - "PACKAGE_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }') # | sed 's/[\",]//g')"       
       - docker build -t $IMAGE_REPO_NAME:$PACKAGE_VERSION .
       - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$PACKAGE_VERSION
-# artifacts:
-#   type: zip
-#   files:
-#     - README.md
-#     - package.json
-#     - server.js
-#     - .ebextensions/*
-#     - node_modules/**/*
-#     - public/**/*
