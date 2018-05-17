@@ -8,7 +8,7 @@ phases:
   pre_build:
     commands:
       - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
-      - PACKAGE_VERSION="$(cat package.json | jq '.version')"
+      - PACKAGE_VERSION=$(cat package.json | jq '.version' | tr -d '"')
       - IMAGE_URI="${REPOSITORY_URI}:${PACKAGE_VERSION}"
   build:
     commands:
