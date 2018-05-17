@@ -1,10 +1,13 @@
 version: 0.2
 
 phases:
+  install:
+    commands:
+      - apt-get install -y jq
   pre_build:
     commands:
       - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
-      - PACKAGE_VERSION="$(grep version package.json | cut -c 15- | rev | cut -c 3- | rev)"
+      - PACKAGE_VERSION="$(cat package.json | jq '.version')"
       - IMAGE_URI="${REPOSITORY_URI}:${PACKAGE_VERSION}"
   build:
     commands:
